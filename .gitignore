@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.serverless/
+package-lock.json
+
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
+.coverage
+.env
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Serverless
+.serverless
+serverless.env.yml
+
+# Environment variables
+.env*
+!.env.example
+
+# Coverage reports
+coverage/
+htmlcov/

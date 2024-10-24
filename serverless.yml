@@ -1,0 +1,49 @@
+service: aws-translate-api
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  environment: ${file(./config/env.${self:provider.stage}.yml)}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - translate:TranslateText
+          Resource: "*"
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer:
+      name: python-deps
+      description: Python dependencies for translate API
+
+functions:
+  translate:
+    handler: src/lambda_function.lambda_handler
+    events:
+      - http:
+          path: translate
+          method: post
+          cors: true
+    environment:
+      STAGE: ${self:provider.stage}
+      POWERTOOLS_SERVICE_NAME: translate-api
+      LOG_LEVEL: ${self:provider.environment.LOG_LEVEL}
+
+package:
+  patterns:
+    - '!**/*.md'
+    - '!tests/**'
+    - '!docs/**'
+    - '!.github/**'
+    - '!.git/**'
+    - '!.env*'
