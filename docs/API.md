@@ -11,8 +11,8 @@ Translates text from one language to another using AWS Translate.
 ```json
 {
   "text": "Text to translate",
-  "target_language": "es",
-  "source_language": "auto"  // optional
+  "targetLanguage": "es",
+  "sourceLanguage": "auto"  // optional
 }
 ```
 
@@ -21,9 +21,9 @@ Translates text from one language to another using AWS Translate.
 Success (200):
 ```json
 {
-  "translated_text": "Texto traducido",
-  "detected_source_language": "en",
-  "target_language": "es",
+  "translatedText": "Texto traducido",
+  "detectedSourceLanguage": "en",
+  "targetLanguage": "es",
   "timestamp": "2024-10-24T12:00:00.000Z"
 }
 ```
@@ -36,6 +36,9 @@ Error (400):
 }
 ```
 
-#### Supported Languages
+#### Request Limits
+- Maximum text length: 5000 characters
+- Language codes must be 2 characters (ISO 639-1)
 
+#### Supported Languages
 Refer to [AWS Translate documentation](https://docs.aws.amazon.com/translate/latest/dg/what-is.html) for supported language codes.

@@ -9,39 +9,40 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     strategy:
       matrix:
-        python-version: [3.9]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        node-version: ${{ matrix.node-version }}
     
-    - name: Cache pip packages
+    - name: Cache node modules
       uses: actions/cache@v3
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-pip-
+          ${{ runner.os }}-node-
     
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      run: npm ci
     
-    - name: Run tests with coverage
-      run: |
-        pytest --cov=src tests/ --cov-report=xml
+    - name: Run linter
+      run: npm run lint
     
-    - name: Upload coverage to Codecov
+    - name: Run tests
+      run: npm test
+    
+    - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
-        file: ./coverage.xml
+        file: ./coverage/lcov.info
         flags: unittests
         fail_ci_if_error: true
 
@@ -53,21 +54,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Setup Node.js
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
-    
-    - name: Install Serverless Framework
-      run: npm install -g serverless
+        node-version: '18.x'
     
     - name: Install dependencies
-      run: |
-        npm install
-        pip install -r requirements.txt
+      run: npm ci
     
     - name: Deploy
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: serverless deploy --stage prod
+      run: npm run deploy:prod
