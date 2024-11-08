@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-translate": "^3.450.0",
+    "@braintree/sanitize-url": "^7.1.0",
+    "dompurify": "^3.1.7",
     "http-errors": "^2.0.0",
     "joi": "^17.11.0",
+    "jsdom": "^25.0.1",
     "winston": "^3.11.0"
   },
   "devDependencies": {

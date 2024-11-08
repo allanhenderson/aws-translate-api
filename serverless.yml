@@ -2,6 +2,7 @@
 org: allanhenderson
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: vs-translate
+# serverless.yml
 service: aws-translate-api
 
 provider:
@@ -17,32 +18,34 @@ provider:
           Action:
             - translate:TranslateText
           Resource: "*"
-
-plugins:
-  - serverless-offline
+  httpApi:
+    cors:
+      allowedOrigins:
+        - 'http://localhost:3000'  # In production, specify your actual frontend domain
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+        - X-Api-Key
+      allowedMethods:
+        - POST
+        - OPTIONS
+      allowCredentials: true
+      maxAge: 300 # Optional: cache preflight requests for 5 minutes
 
 functions:
   translate:
     handler: src/handler.translate
     events:
-      - http:
-          path: translate
-          method: post
-          cors: true
-    environment:
-      STAGE: ${self:provider.stage}
-      SERVICE_NAME: translate-api
-      LOG_LEVEL: ${self:provider.environment.LOG_LEVEL}
-
-custom:
-  dotenv:
-    path: ./config/.env.${self:provider.stage}
-
-package:
-  patterns:
-    - '!**/*.test.js'
-    - '!coverage/**'
-    - '!docs/**'
-    - '!.github/**'
-    - '!.git/**'
-    - '!.env*'
+      - httpApi:
+          path: /translate
+          method: POST
+          cors: 
+            allowedOrigins:
+            - http://localhost:3000
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowedMethods:
+              - GET
+            allowCredentials: true
+            maxAge: 6000 # In seconds
