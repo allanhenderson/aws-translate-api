@@ -49,3 +49,12 @@ functions:
               - GET
             allowCredentials: true
             maxAge: 6000 # In seconds
+  fetchContent:
+    handler: src/handlers/fetchContent.fetchContent
+    events:
+      - httpApi:
+          path: /fetch-content
+          method: POST
+          cors: true
+    timeout: 30
+    memorySize: 256
