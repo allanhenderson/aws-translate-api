@@ -7,7 +7,7 @@ service: aws-translate-api
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
   environment: ${file(./config/env.${self:provider.stage}.yml)}
@@ -34,7 +34,7 @@ provider:
 
 functions:
   translate:
-    handler: src/handler.translate
+    handler: src/handlers/translate.translate
     events:
       - httpApi:
           path: /translate
