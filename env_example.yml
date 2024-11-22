@@ -1,0 +1,3 @@
+LOG_LEVEL: INFO
+POWERTOOLS_SERVICE_NAME: translate-api
+ALLOWED_ORIGINS: http://my_frontend_url
