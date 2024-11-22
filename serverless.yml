@@ -8,7 +8,7 @@ service: aws-translate-api
 provider:
   name: aws
   runtime: nodejs20.x
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'local'}
   region: ${opt:region, 'us-east-1'}
   environment: ${file(./config/env.${self:provider.stage}.yml)}
   iam:
@@ -21,7 +21,7 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - 'http://localhost:3000'  # In production, specify your actual frontend domain
+        - ${file(./config/env.${self:provider.stage}.yml):ALLOWED_HOSTS}  # In production, specify your actual frontend domain
       allowedHeaders:
         - Content-Type
         - Authorization
@@ -41,12 +41,12 @@ functions:
           method: POST
           cors: 
             allowedOrigins:
-            - http://localhost:3000
+            - ${file(./config/env.${self:provider.stage}.yml):ALLOWED_HOSTS}
             allowedHeaders:
               - Content-Type
               - Authorization
             allowedMethods:
-              - GET
+              - POST
             allowCredentials: true
             maxAge: 6000 # In seconds
   fetchContent:
@@ -55,6 +55,15 @@ functions:
       - httpApi:
           path: /fetch-content
           method: POST
-          cors: true
+          cors: 
+            allowedOrigins:
+            - ${file(./config/env.${self:provider.stage}.yml):ALLOWED_HOSTS}
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowedMethods:
+              - POST
+            allowCredentials: true
+            maxAge: 6000 # In seconds
     timeout: 30
     memorySize: 256
