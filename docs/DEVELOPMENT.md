@@ -8,7 +8,7 @@ npm install
 ```
 
 2. Configure environment:
-- Copy `config/env.example.yml` to `config/env.dev.yml`
+- Copy `env_example.yml` to `config/env.dev.yml`
 - Update values as needed
 
 ## Local Development
