@@ -6,6 +6,7 @@ package-lock.json
 # Environment
 .env*
 !.env.example
+config/env*
 
 # IDE
 .idea/
